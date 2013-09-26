@@ -85,11 +85,14 @@ class EcommerceConfig extends Object {
 	 * @param String | NULL $subIdentifier A secondary identifier string, as provided in your fixture file
 	 */
 	public static function update($value, $className, $identifier, $subIdentifier = null) {
+		if(!self::$singleton) {
+			self::$singleton = new EcommerceConfig();
+		}
 		if($subIdentifier) {
-			$this->fixtureDictionary[$className][$identifier][$subIdentifier] = $value;
+			self::$singleton->fixtureDictionary[$className][$identifier][$subIdentifier] = $value;
 		}
 		else {
-			$this->fixtureDictionary[$className][$identifier] = $value;
+			self::$singleton->fixtureDictionary[$className][$identifier] = $value;
 		}
 	}
 
