@@ -78,6 +78,22 @@ class EcommerceConfig extends Object {
 	}
 
 	/**
+	 *
+	 * @param Mixed $value
+	 * @param String $className The data class, as specified in your fixture file.  Parent classes won't work
+	 * @param String $identifier The identifier string, as provided in your fixture file
+	 * @param String | NULL $subIdentifier A secondary identifier string, as provided in your fixture file
+	 */
+	public static function update($value, $className, $identifier, $subIdentifier = null) {
+		if($subIdentifier) {
+			$this->fixtureDictionary[$className][$identifier][$subIdentifier] = $value;
+		}
+		else {
+			$this->fixtureDictionary[$className][$identifier] = $value;
+		}
+	}
+
+	/**
 	 * The location(s) of the .yaml fixture file, relative to the site base dir
 	 *
 	 * @var Array

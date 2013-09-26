@@ -182,6 +182,7 @@ class EcommerceConfigDefinitions extends Object {
 				"send_all_emails_plain" => "Should all the emails be send as plain text?  Not recommended.",
 				"css_file_location" => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
 				"copy_to_admin_for_all_emails" => "Send a copy to the shop administrator for every email sent?",
+				"max_number_of_days_since_order_for_sending_emails" => "Maximum number of days that an email can be sent after the order has been placed.  This variable is here to prevent emails being sent much after the order, which could be embarrasing. "
 			),
 			"EcommerceCurrency" => array(
 				"exchange_provider_class" => "The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.",

@@ -1164,6 +1164,9 @@ class Order extends DataObject {
 			SSViewer::current_theme($oldTheme);
 			return $result;
 		}
+		else {
+			user_error("no from ($from) or to ($to) specified.", E_USER_WARNING);
+		}
 		return false;
 	}
 

@@ -170,7 +170,7 @@ Order_Email:
   send_all_emails_plain: false
   css_file_location: "ecommerce/css/OrderReport.css"
   copy_to_admin_for_all_emails: true
-
+  max_number_of_days_since_order_for_sending_emails: 10
 
 
 ################### MONEY #####################
