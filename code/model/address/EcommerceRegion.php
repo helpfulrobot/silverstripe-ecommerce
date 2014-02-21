@@ -98,15 +98,6 @@ class EcommerceRegion extends DataObject {
 		"Country.Title"
 	);
 
-
-	/**
-	 * do we use regions at all in this ecommerce application?
-	 * @return Bool
-	 **/
-	public static function show() {
-		return DataObject::get_one("EcommerceRegion") ? true : false;
-	}
-
 	/**
 	 * Standard SS method
 	 * @return FieldSet

@@ -29,6 +29,7 @@ class BillingAddress extends OrderAddress {
 			'RegionCode',
 			'Country',
 			'Phone',
+			'Geocoded',
 			'MobilePhone',
 			'Email'
 		)

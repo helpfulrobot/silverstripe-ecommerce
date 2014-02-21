@@ -197,25 +197,34 @@ class OrderAddress extends DataObject {
 	 * @return DropdownField
 	 **/
 	protected function getRegionField($name) {
-		if(EcommerceRegion::show()) {
-			$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
-			$count = count($regionsForDropdown);
-			if($count< 1) {
-					$regionField = new HiddenField($name, '', 0);
+		$currentCountryObject = EcommerceCountry::get_country_object();
+		$currentCountryRegionLabel = "";
+		$hasSpecificRegionName = false;
+		if($currentCountryObject) {
+			$currentCountryRegionLabel = $currentCountryObject->NameOfRegion;
+			$hasSpecificRegionName = true;
+		}
+		if(!$currentCountryRegionLabel) {
+			$currentCountryRegionLabel = EcommerceRegion::i18n_singular_name();
+		}
+		$regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
+		$count = count($regionsForDropdown);
+		if($count < 1) {
+			if($hasSpecificRegionName) {
+				$regionField = new TextField($name."_FIND", $currentCountryRegionLabel);
 			}
-			else {
-				$regionField = new DropdownField($name,EcommerceRegion::i18n_singular_name(), $regionsForDropdown);
-				if($count < 2) {
-					$regionField = $regionField->performReadonlyTransformation();
-				}
-				else {
-					$regionField->setEmptyString(_t("OrderAdress.PLEASE_SELECT_REGION", "--- Select Region ---"));
-				}
+			else{
+				$regionField = new HiddenField($name, '', 0);
 			}
 		}
 		else {
-			//adding region field here as hidden field to make the code easier below...
-			$regionField = new HiddenField($name, '', 0);
+			$regionField = new DropdownField($name,$currentCountryRegionLabel, $regionsForDropdown);
+			if($count < 2) {
+				$regionField = $regionField->performReadonlyTransformation();
+			}
+			else {
+				$regionField->setEmptyString(_t("OrderAdress.PLEASE_SELECT_REGION", "--- Select Region ---"));
+			}
 		}
 		$prefix = EcommerceConfig::get("OrderAddress", "field_class_and_id_prefix");
 		$regionField->addExtraClass($prefix.'ajaxRegionField');
@@ -326,6 +335,30 @@ class OrderAddress extends DataObject {
 	}
 
 	/**
+	 * returns a string that can be used to geocode the address
+	 * @return String
+	 */
+	protected function getAddressOnlyString(){
+		$string = "";
+		$stringArray = array();
+		$fields = $this->getAddressOnlyFieldNameArray($this->fieldPrefix());
+		if($fields) {
+			foreach($fields as $field) {
+				$stringArray[] = $this->$field;
+			}
+		}
+		$regionMethod = $this->fieldPrefix()."Region";
+		if($region = $this->$regionMethod()) {
+			$stringArray[] = $region->Name;
+		}
+		$countryMethod = $this->fieldPrefix()."Country";
+		if($country = DataObject::get_one("EcommerceCountry", "\"Code\" = '".$this->$countryMethod."'")) {
+			$stringArray[] = $country->Name;
+		}
+		return trim(implode(", ", $stringArray));
+	}
+
+	/**
 	 *@param String - $prefix = either "" or "Shipping"
 	 *@return array of fields for an Order DataObject
 	 **/
@@ -343,6 +376,27 @@ class OrderAddress extends DataObject {
 			"Country",
 			"Phone",
 			"MobilePhone",
+		);
+		if($fieldPrefix) {
+			foreach($fieldNameArray as $key => $value) {
+				$fieldNameArray[$key] = $fieldPrefix.$value;
+			}
+		}
+		return $fieldNameArray;
+	}
+
+	/**
+	 *@param String - $prefix = either "" or "Shipping"
+	 *@return array of fields for an Order DataObject
+	 **/
+	protected function getAddressOnlyFieldNameArray($fieldPrefix = '') {
+		$fieldNameArray = array(
+			"Address",
+			"Address2",
+			"City",
+			"PostalCode",
+			"RegionID",
+			"Country"
 		);
 		if($fieldPrefix) {
 			foreach($fieldNameArray as $key => $value) {
@@ -556,6 +610,7 @@ class OrderAddress extends DataObject {
 
 	function onAfterWrite(){
 		parent::onAfterWrite();
+		OrderAddress_Check::check($this->getAddressOnlyString());
 		if($this->exists()) {
 			$order = DataObject::get_one("Order", "\"". $this->ClassName."ID\" = ".$this->ID);
 			if($order && $order->ID != $this->OrderID) {
@@ -616,5 +671,41 @@ class OrderAddress extends DataObject {
 		}
 	}
 
+
 }
 
+/**
+ * A utility class for geocoding addresses using the google maps API.
+ *
+ * @package silverstripe-addressable
+ */
+class OrderAddress_Check {
+
+	const API_URL = 'http://maps.googleapis.com/maps/api/geocode/xml';
+
+	/**
+	 * Convert an address into a latitude and longitude.
+	 *
+	 * @param  string $address The address to geocode.
+	 * @return array An associative array with lat and lng keys.
+	 */
+	public static function check($addressString) {
+		$service = new RestfulService(self::API_URL);
+		$service->setQueryString(array(
+			'address' => $addressString,
+			'sensor'  => 'false'
+		));
+		$response = $service->request()->simpleXML();
+		print_r($addressString);
+		print_r($response);
+		if ($response->status != 'OK') {
+			return false;
+		}
+		$location = $response->result->geometry->location;
+		return array(
+			'lat' => (float) $location->lat,
+			'lng' => (float) $location->lng
+		);
+	}
+
+}

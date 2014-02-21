@@ -2164,7 +2164,7 @@ class Order extends DataObject {
 		if($currency = $this->CurrencyUsed()) {
 			if(!$currency->IsDefault()) {
 				if(!$this->ExchangeRate) {
-					user_error("Order is using alternative currency without exchange rate record.", E_USER_NOTICE);
+					//user_error("Order is using alternative currency ($currency->Code) without exchange rate record.", E_USER_NOTICE);
 				}
 				return true;
 			}

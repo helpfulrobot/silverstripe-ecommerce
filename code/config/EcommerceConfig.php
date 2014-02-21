@@ -78,6 +78,23 @@ class EcommerceConfig extends Object {
 	}
 
 	/**
+	 * Returns a configuration.  This is the main static method for this Object.
+	 *
+	 * @return Mixed
+	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
+	 * @param $identifier The identifier string, as provided in your fixture file
+	 * @param $subIdentifier A secondary identifier string, as provided in your fixture file
+	 * @TODO: implement subIdentfier
+	 */
+	static function update($value, $className, $identifier, $subIdentifier = null) {
+		if(!self::$singleton) {
+			self::$singleton = new EcommerceConfig();
+		}
+		//SS_Backtrace::backtrace();
+		return self::$singleton->setStaticValue($value, $className, $identifier, $subIdentifier);
+	}
+
+	/**
 	 * The location(s) of the .yaml fixture file, relative to the site base dir
 	 *
 	 * @var Array
@@ -93,6 +110,24 @@ class EcommerceConfig extends Object {
 	 */
 	protected $fixtureDictionary = array();
 
+
+	/**
+	 * Get the value for a static variable.
+	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
+	 * @param $identifier The identifier string, as provided in your fixture file
+	 * @param $subIdentifier A secondary identifier string, as provided in your fixture file
+	 * @return Mixed
+	 * @TODO: implement subIdentfier
+	 */
+	public function setStaticValue($value, $className, $identifier, $subIdentifier = null) {
+		//this only runs once
+		if($subIdentifier) {
+			$this->fixtureDictionary[$className][$identifier][$subIdentifier] = $value;
+		}
+		else {
+			$this->fixtureDictionary[$className][$identifier] = $value;
+		}
+	}
 
 	/**
 	 * Get the value for a static variable.

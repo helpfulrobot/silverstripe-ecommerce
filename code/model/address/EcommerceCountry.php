@@ -32,7 +32,8 @@ class EcommerceCountry extends DataObject {
 	static $db = array(
 		"Code" => "Varchar(20)",
 		"Name" => "Varchar(200)",
-		"DoNotAllowSales" => "Boolean"
+		"DoNotAllowSales" => "Boolean",
+		"NameOfRegion" => "Varchar(200)"
 	);
 
 	/**
@@ -213,6 +214,13 @@ class EcommerceCountry extends DataObject {
 	protected static $get_country_cache = null;
 		public static function reset_get_country_cache() {self::$get_country_cache = null;}
 
+
+	public static function get_country_object() {
+		$country = EcommerceCountry::get_country();
+		if($country){
+			return DataObject::get("EcommerceCountry", "\"Code\" = '".$country."'");
+		}
+	}
 	/**
 	 * This function works out the most likely country for the current order.
 	 * @return String - Country Code - e.g. NZ

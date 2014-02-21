@@ -28,6 +28,7 @@ class ShippingAddress extends OrderAddress {
 			'ShippingPostalCode',
 			'ShippingRegionCode',
 			'ShippingCountry',
+			'ShippingGeocoded',
 			'ShippingPhone',
 			'ShippingMobilePhone'
 		)
@@ -43,6 +44,7 @@ class ShippingAddress extends OrderAddress {
 		'ShippingPostalCode' => 'Varchar(30)',
 		'ShippingRegionCode' => 'Varchar(20)',
 		'ShippingCountry' => 'Varchar(4)',
+		'ShippingGeocoded' => 'Varchar(255)',
 		'ShippingPhone' => 'Varchar(100)',
 		'ShippingMobilePhone' => 'Varchar(100)',
 		'Obsolete' => 'Boolean',

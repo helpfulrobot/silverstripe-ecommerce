@@ -56,7 +56,7 @@ class EcommerceCountryAndRegionTasks extends BuildTask{
 
 class EcommerceCountryAndRegionTasks_DisallowAllCountries extends BuildTask{
 
-	protected $title = "Disallows sale to all countries";
+	protected $title = "Disallows sales to all countries";
 
 	protected $description = "We add this task to reset all countries from Allow Sales to Disallow Sales - as a good starting point when selling to just a few countries";
 
@@ -65,10 +65,12 @@ class EcommerceCountryAndRegionTasks_DisallowAllCountries extends BuildTask{
 		$array = EcommerceCountry::get_country_dropdown();
 		$allowedArray = DataObject::get("EcommerceCountry", "\"DoNotAllowSales\" = 0");
 		foreach($allowedArray as $obj) {
-			$obj->DoNotAllowSales = 1; 
+			$obj->DoNotAllowSales = 1;
 			$obj->write();
 			DB::alteration_message("Disallowing sales to ".$obj->Name);
 		}
 	}
 
 }
+
+
