@@ -610,7 +610,7 @@ class OrderAddress extends DataObject {
 
 	function onAfterWrite(){
 		parent::onAfterWrite();
-		OrderAddress_Check::check($this->getAddressOnlyString());
+		//OrderAddress_Check::check($this->getAddressOnlyString());
 		if($this->exists()) {
 			$order = DataObject::get_one("Order", "\"". $this->ClassName."ID\" = ".$this->ID);
 			if($order && $order->ID != $this->OrderID) {
