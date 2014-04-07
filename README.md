@@ -1,7 +1,5 @@
-###############################################
 E-commerce SSU Branch
-version 0.2alpha
-###############################################
+================================================================================
 
 This is the Sunny Side Up branch of e-commerce.
 Many
@@ -12,8 +10,7 @@ Nicolaas Francken [at] sunnysideup.co.nz
 
 Requirements
 -----------------------------------------------
-Payment
-SilverStripe 2.4+
+see composer.json
 
 Project Home
 -----------------------------------------------
