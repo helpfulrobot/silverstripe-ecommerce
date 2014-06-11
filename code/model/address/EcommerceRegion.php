@@ -154,6 +154,7 @@ class EcommerceRegion extends DataObject {
 	protected static function get_default_array() {
 		$defaultArray = array();
 		$defaultRegion = EcommerceCountry::get_country_id();
+		$defaultRegionWhere = "";
 		if($defaultRegion) {
 			$defaultRegionWhere = "AND \"CountryID\"  = '".$defaultRegion."'";
 		}
