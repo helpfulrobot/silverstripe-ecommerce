@@ -1164,6 +1164,7 @@ class Order extends DataObject {
 			SSViewer::current_theme($oldTheme);
 			return $result;
 		}
+		debug::log("Email address not found! f: $from t: $to");
 		return false;
 	}
 

@@ -95,6 +95,8 @@ Abstract class Order_Email extends Email {
 			$this->createRecord($result, $order);
 			return $result;
 		}
+		debug::log("could not send email from ".$order->ID." using classname ".$this->ClassName." it has been sent: ".($this->hasBeenSent($order) ? "YES" : "NO"));
+		return false;
 	}
 
 	/**

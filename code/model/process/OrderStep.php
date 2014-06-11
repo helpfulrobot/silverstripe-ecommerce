@@ -518,7 +518,7 @@ class OrderStep extends DataObject {
 	public function hasBeenSent($order, $checkDateOfOrder = true) {
 		//if it has been more than a week since the order was last edited (submitted) then we do not send emails as
 		//this would be embarrasing.
-		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-10 days"))) {
+		if( $checkDateOfOrder && (strtotime($order->LastEdited) < strtotime("-15 days"))) {
 			return true;
 		}
 		return DataObject::get_one("OrderEmailRecord", "\"OrderEmailRecord\".\"OrderID\" = ".$order->ID." AND \"OrderEmailRecord\".\"OrderStepID\" = ".$this->ID." AND	\"OrderEmailRecord\".\"Result\" = 1");
